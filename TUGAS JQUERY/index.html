@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        table,th,tr,td {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body> 
+    <!-- <div>ini</div>
+    <div>kata</div>
+    <span>ini</span>
+    <span>kata</span> -->
+    <div id="page-form">
+        <form id="form">
+            <input type="text" id="nama" placeholder="nama">
+            <input type="text" id="alamat" placeholder="alamat">
+            <input type="text" id="jabatan" placeholder="jabatan">
+            <button type="submit"> Tambah </button>
+        </form>
+        <br>
+        <button id = "btn-back">Kembali</button>
+    </div>
+
+    <div id="page-form-edit">
+        <form id="form-edit">
+            <input type="hidden" id="id-edit" placeholder="id">
+            <input type="text" id="nama-edit" placeholder="nama">
+            <input type="text" id="alamat-edit" placeholder="alamat">
+            <input type="text" id="jabatan-edit" placeholder="jabatan">
+            <button type="submit"> Edit </button>
+        </form>
+        <br>
+        <button id = "btn-back-edit">Kembali</button>
+    </div>
+
+    <div id="page-list">
+        <button id="btn-add" >tambah data pegawai</button>
+        <br>
+        <br>
+        <table> 
+            <tr >
+                <th scope="col">No</th>
+                <th scope="col">Nama</th>
+                <th scope="col">Alamat</th>
+                <th scope="col">Jabatan</th>
+                <th scope="col">Aksi</th>
+            </tr>
+            <tbody id="body-table" ></tbody>
+        </table>
+    </div>
+     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" 
+    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" 
+    crossorigin="anonymous" 
+    referrerpolicy="no-referrer">
+    </script>
+    <script>
+        $(document).ready(function(){
+            $("#page-form").hide();
+            $("#page-form-edit").hide();
+            let index_edit=null;
+
+            const pegawai = [
+                {
+                    id: 1,
+                    nama: "titis",
+                    alamat: "yogyakarta",
+                    jabatan:"staff it",
+                },
+                {
+                    id: 2,
+                    nama: "jaka",
+                    alamat: "solo",
+                    jabatan:"design",
+                },
+                {
+                    id: 3,
+                    nama: "babe",
+                    alamat: "magelang",
+                    jabatan:"HR",
+                },
+            ];
+
+            // $("#body-table").html(`   
+            //          <tr>
+            //         <td> ${pegawai[0].no} </td>
+            //         <td> ${pegawai[0].nama} </td>
+            //         <td> ${pegawai[0].alamat} </td>
+            //         <td> ${pegawai[0].jabatan} </td>
+            //         </tr>
+            // `);
+            pegawai.forEach(function(item, index){
+                $("#body-table").append(`   
+                     <tr>
+                    <td> ${index + 1} </td>
+                    <td> ${item.nama} </td>
+                    <td> ${item.alamat} </td>
+                    <td> ${item.jabatan} </td>
+                    <td> 
+                        <button class="btn-edit" data-index="${index}">Edit</button>
+                         <button class="btn-delete" data-index="${index}">Hapus</button></td>
+                    </tr>
+            `);
+            });
+
+            function refresh_table(){
+                $("#body-table").empty();
+
+                pegawai.forEach(function(item, index){
+
+                        $("#body-table").append(`   
+                         <tr>
+                        <td> ${index + 1} </td>
+                        <td> ${item.nama} </td>
+                        <td> ${item.alamat} </td>
+                        <td> ${item.jabatan} </td>
+                        <td> 
+                            <button class="btn-edit" data-index="${index}">Edit</button>
+                            <button class="btn-delete" data-index="${index}">Hapus</button></td>
+
+                        </tr>
+                `       );
+                    });
+                        $(".btn-delete").click(function() {
+                        const index = $(this).attr('data-index');
+                        pegawai.splice(index, 1);
+                        refresh_table();
+                        });
+
+                            $(".btn-edit").click(function() {
+                                const index = $(this).attr('data-index');
+                                $("#nama-edit").val(pegawai[index].nama);
+                                $("#alamat-edit").val(pegawai[index].alamat);
+                                $("#jabatan-edit").val(pegawai[index].jabatan);
+                                $("#id-edit").val(pegawai[index].id);
+                                
+                                index_edit=index;
+                                //const id=pegawai[index].id;
+                                //console.log(index);
+                                $("#page-list").hide();
+                                $("#page-form").hide();
+                                $("#page-form-edit").show();
+                                //refresh_table();
+                            });
+            };
+
+            $(".btn-delete").click(function() {
+                const index = $(this).attr('data-index');
+                pegawai.splice(index, 1);
+                refresh_table();
+            });
+
+            $(".btn-edit").click(function() {
+                const index = $(this).attr('data-index');
+                $("#nama-edit").val(pegawai[index].nama);
+                $("#alamat-edit").val(pegawai[index].alamat);
+                $("#jabatan-edit").val(pegawai[index].jabatan);
+                $("#id-edit").val(pegawai[index].id);
+                
+                index_edit=index;
+                //const id=pegawai[index].id;
+                //console.log(index);
+                $("#page-list").hide();
+                $("#page-form").hide();
+                $("#page-form-edit").show();
+                //refresh_table();
+            });
+            
+            $("#btn-add").click(function(){
+                $("#page-list").hide();
+                $("#page-form").show();
+                $("#page-form-edit").hide();
+            });
+
+            $("#btn-back").click(function(){
+                $("#page-list").show();
+                $("#page-form").hide();
+                $("#page-form-edit").hide();
+            });
+
+            $("#btn-back-edit").click(function(){
+                $("#page-list").show();
+                $("#page-form").hide();
+                $("#page-form-edit").hide();
+            });
+
+                $("#form").submit(function(event){
+                     event.preventDefault();
+                     const pegawai_baru={
+                         id : Math.random(),
+                         nama : $("#nama").val(),
+                         alamat :$("#alamat").val(),
+                         jabatan :$("#jabatan").val(),
+                     };
+
+                     $("#nama").val(""),
+                     $("#alamat").val(""),
+                     $("#jabatan").val(""),
+
+                    pegawai.push(pegawai_baru);
+                    $("#page-list").show();
+                    $("#page-form").hide();
+                    $("#page-form-edit").hide();
+                     refresh_table();
+                   
+
+                });
+
+                $("#form-edit").submit(function(event){
+                     event.preventDefault();
+                     const pegawai_edit={
+                         id : $("#id-edit").val(),
+                         nama : $("#nama-edit").val(),
+                         alamat :$("#alamat-edit").val(),
+                         jabatan :$("#jabatan-edit").val(),
+                     };
+
+                    //  $("#id-edit").val(""),
+                    //  $("#nama").val(""),
+                    //  $("#alamat").val(""),
+                    //  $("#jabatan").val(""),
+
+                    pegawai[index_edit]=pegawai_edit;
+                    console.log(pegawai);
+                    $("#page-list").show();
+                    $("#page-form").hide();
+                    $("#page-form-edit").hide();
+                     refresh_table();
+                   
+
+                });
+
+        });
+    </script>
+</body>
+</html>
